@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+cryptography
+scikit-learn
+pandas
+numpy
+psycopg2-binary  <-- Adicione este aqui
+python-dotenv
