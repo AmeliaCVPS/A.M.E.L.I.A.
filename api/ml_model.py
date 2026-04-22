@@ -1,11 +1,11 @@
 # database.py
-"""
-Camada de persistência do sistema AMÉLIA.
-Usa SQLite (leve, sem servidor) + criptografia Fernet (AES-128 simétrico).
 
-LGPD: Apenas dados necessários são armazenados.
-      O CPF nunca é salvo — apenas seu hash SHA-256.
-"""
+#Camada de persistência do sistema AMÉLIA.
+#Usa SQLite (leve, sem servidor) + criptografia Fernet (AES-128 simétrico).
+
+#LGPD: Apenas dados necessários são armazenados.
+     # O CPF nunca é salvo — apenas seu hash SHA-256.
+
 
 import sqlite3
 import json
@@ -24,7 +24,7 @@ from datetime import datetime
 KEY_FILE = "secret.key"
 
 def load_or_create_key() -> bytes:
-    """Carrega a chave do arquivo ou gera uma nova."""
+  # """Carrega a chave do arquivo ou gera uma nova."""
     if os.path.exists(KEY_FILE):
         with open(KEY_FILE, "rb") as f:
             return f.read()
@@ -44,23 +44,23 @@ CIPHER = Fernet(load_or_create_key())
 # ===========================================================
 
 def encrypt(data: str) -> str:
-    """
-    Criptografa uma string usando AES-128 (Fernet).
-    Retorna o texto cifrado em base64 (seguro para armazenar).
-    """
+    
+   # Criptografa uma string usando AES-128 (Fernet).
+   #Retorna o texto cifrado em base64 (seguro para armazenar).
+    
     encrypted_bytes = CIPHER.encrypt(data.encode("utf-8"))
     return encrypted_bytes.decode("utf-8")
 
 def decrypt(token: str) -> str:
-    """Descriptografa um token Fernet e retorna a string original."""
+    #"""Descriptografa um token Fernet e retorna a string original."""
     decrypted_bytes = CIPHER.decrypt(token.encode("utf-8"))
     return decrypted_bytes.decode("utf-8")
 
 def hash_cpf(cpf: str) -> str:
-    """
-    Gera um hash irreversível do CPF usando SHA-256.
-    Permite identificar o paciente sem expor o dado real.
-    """
+    
+  #  Gera um hash irreversível do CPF usando SHA-256.
+  #  Permite identificar o paciente sem expor o dado real.
+    
     cpf_clean = "".join(filter(str.isdigit, cpf))
     return hashlib.sha256(cpf_clean.encode()).hexdigest()
 
@@ -70,7 +70,7 @@ def hash_cpf(cpf: str) -> str:
 # ===========================================================
 
 def init_db(db_path: str = "amelia.db"):
-    """Cria as tabelas do banco se ainda não existirem."""
+    #"""Cria as tabelas do banco se ainda não existirem."""
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
@@ -91,13 +91,13 @@ def init_db(db_path: str = "amelia.db"):
 
 
 def save_prontuario(prontuario: dict, cpf: str, db_path: str = "amelia.db"):
-    """
-    Salva um prontuário no banco, criptografando os dados sensíveis.
     
-    O campo 'encrypted_data' contém o JSON completo cifrado.
-    Somente o hash, timestamp, cor e senha ficam em texto claro
-    (para permitir relatórios sem descriptografar tudo).
-    """
+   # Salva um prontuário no banco, criptografando os dados sensíveis.
+    
+  #  O campo 'encrypted_data' contém o JSON completo cifrado.
+   # Somente o hash, timestamp, cor e senha ficam em texto claro
+  #  (para permitir relatórios sem descriptografar tudo).
+    
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
@@ -123,7 +123,7 @@ def save_prontuario(prontuario: dict, cpf: str, db_path: str = "amelia.db"):
 
 
 def load_prontuario(prontuario_id: str, db_path: str = "amelia.db") -> dict:
-    """Carrega e descriptografa um prontuário pelo ID."""
+   # """Carrega e descriptografa um prontuário pelo ID."""
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
 
