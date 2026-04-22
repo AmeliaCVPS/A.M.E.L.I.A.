@@ -1,14 +1,4 @@
-# main.py
-"""
-API Principal do sistema AMÉLIA.
-Recebe dados do frontend, processa com ML e salva no banco.
 
-FastAPI foi escolhido por:
-  - Documentação automática (/docs) — ótimo para apresentar na feira!
-  - Validação de dados nativa (Pydantic)
-  - Suporte a async/await (ideal para I/O de áudio)
-  - 100% compatível com Python 3.8+
-"""
 
 from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
@@ -55,7 +45,7 @@ async def startup():
 # Se o frontend mandar um campo errado, a API rejeita com erro claro.
 
 class SymptomsInput(BaseModel):
-    """Dados enviados pelo frontend após a triagem por chat/voz."""
+    #"""Dados enviados pelo frontend após a triagem por chat/voz."""
     cpf: str = Field(..., description="CPF do paciente (será hasheado, nunca armazenado)")
     age: int = Field(..., ge=0, le=120, description="Idade em anos")
     sex: str = Field(..., pattern="^[MF]$")
@@ -69,7 +59,7 @@ class SymptomsInput(BaseModel):
 
 
 class TranscriptionInput(BaseModel):
-    """Texto transcrito do áudio do paciente."""
+    #"""Texto transcrito do áudio do paciente."""
     text: str
     cpf: str
     age: int
@@ -82,7 +72,7 @@ class TranscriptionInput(BaseModel):
 _password_counters = {"red": 0, "yellow": 0, "green": 0}
 
 def generate_triage_password(color: str) -> str:
-    """Gera senha de triagem sequencial por cor."""
+    #"""Gera senha de triagem sequencial por cor."""
     prefix_map = {"red": "V", "yellow": "A", "green": "V"}
     # Vermelho=V (Vermelho), Amarelo=A, Verde=V (Verde)
     # Na prática, use prefixos distintos!
@@ -98,22 +88,21 @@ def generate_triage_password(color: str) -> str:
 
 @app.get("/health")
 async def health_check():
-    """Rota de verificação — confirma que a API está online."""
+    #"""Rota de verificação — confirma que a API está online."""
     return {"status": "online", "system": "A.M.E.L.I.A", "version": "1.0.0"}
 
 
 @app.post("/triage/classify")
 async def classify_patient(data: SymptomsInput):
-    """
-    ROTA PRINCIPAL DE TRIAGEM
+    # ROTA PRINCIPAL DE TRIAGEM
     
-    Fluxo:
-    1. Recebe sintomas do paciente
-    2. Roda o modelo de ML
-    3. Gera prontuário estruturado
-    4. Criptografa e salva no banco
-    5. Retorna resultado para o frontend
-    """
+    #Fluxo:
+   # 1. Recebe sintomas do paciente
+   # 2. Roda o modelo de ML
+   # 3. Gera prontuário estruturado
+   # 4. Criptografa e salva no banco
+   # 5. Retorna resultado para o frontend
+    
     
     # PASSO 1: Classificar com ML
     risk = predict_risk({
@@ -176,12 +165,12 @@ async def classify_patient(data: SymptomsInput):
 
 @app.post("/triage/from-text")
 async def triage_from_text(data: TranscriptionInput):
-    """
-    Recebe texto (transcrito do áudio pelo frontend)
-    e extrai sintomas usando análise simples.
     
-    Em produção: use um LLM (Claude/GPT) para extração mais robusta.
-    """
+   # Recebe texto (transcrito do áudio pelo frontend)
+    #e extrai sintomas usando análise simples.
+    
+    #Em produção: use um LLM (Claude/GPT) para extração mais robusta.
+  
     text = data.text.lower()
 
     # Extração de sintomas por palavras-chave
@@ -203,7 +192,7 @@ async def triage_from_text(data: TranscriptionInput):
 
 
 def _extract_pain_level(text: str) -> int:
-    """Extrai nível de dor do texto (busca por números 1-10)."""
+   # """Extrai nível de dor do texto (busca por números 1-10)."""
     import re
     matches = re.findall(r'\b([1-9]|10)\b', text)
     if matches:
@@ -216,7 +205,7 @@ def _extract_pain_level(text: str) -> int:
     return 3  # Padrão: dor leve
 
 def _extract_duration(text: str) -> int:
-    """Extrai duração em horas do texto."""
+   # """Extrai duração em horas do texto."""
     import re
     # Procura padrões como "2 dias", "3 horas", "1 semana"
     if m := re.search(r'(\d+)\s*dia', text):
