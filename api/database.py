@@ -10,6 +10,17 @@ DATABASE_URL = os.getenv("DATABASE_URL")
 FERNET_KEY = os.getenv("FERNET_KEY", Fernet.generate_key().decode())
 CIPHER = Fernet(FERNET_KEY.encode())
 
+def hash_cpf(cpf: str) -> str:
+    """
+    Cria um hash SHA-256 do CPF para armazenamento seguro (LGPD).
+    Transforma o CPF em uma string única e irreversível.
+    """
+    # Remove pontos e traços caso o frontend envie o CPF formatado
+    cpf_limpo = str(cpf).replace(".", "").replace("-", "").strip()
+    
+    # Gera o hash
+    return hashlib.sha256(cpf_limpo.encode()).hexdigest()
+
 def get_connection():
     # Conecta ao PostgreSQL na nuvem
     return psycopg2.connect(DATABASE_URL)
