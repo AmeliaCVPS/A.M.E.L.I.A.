@@ -9,8 +9,9 @@ from datetime import datetime, timezone
 from typing import Optional
 
 # Importa nossos módulos
-from database import init_db, save_prontuario, hash_cpf
-from ml_model import predict_risk
+# Como deve ficar (importação relativa):
+from .database import init_db, save_prontuario, hash_cpf
+from .ml_model import predict_risk
 
 # ===========================================================
 # INICIALIZAÇÃO
