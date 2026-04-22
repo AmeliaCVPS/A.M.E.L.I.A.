@@ -5,5 +5,5 @@ cryptography
 scikit-learn
 pandas
 numpy
-psycopg2-binary  
+psycopg2-binary
 python-dotenv
